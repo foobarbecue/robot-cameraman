@@ -98,3 +98,17 @@ class CameramanModeManager:
         from simplebgc.serial_example import control_gimbal
         control_gimbal(yaw_mode=2, yaw_speed=100, yaw_angle=pan_angle,
                        pitch_mode=2, pitch_speed=100, pitch_angle=tilt_angle)
+
+
+class SurfptzModeManager:
+
+    def __init__(
+            self,
+            camera_controller: CameraController) -> None:
+        self._camera_controller = camera_controller
+        self.mode_name = 'manual'
+        self.is_zoom_enabled = False
+
+    def angle(self, pan_angle: int, tilt_angle: int) -> None:
+        self.mode_name = 'angle'
+        self._camera_controller.update(pan_angle, tilt_angle)

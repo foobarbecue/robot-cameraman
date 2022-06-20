@@ -13,11 +13,12 @@ from typing_extensions import Protocol
 from panasonic_camera.camera_manager import PanasonicCameraManager
 from robot_cameraman.annotation import ImageAnnotator
 from robot_cameraman.camera_controller import SmoothCameraController, \
-    SpeedManager
+    SpeedManager, SurfptzCameraController
 from robot_cameraman.camera_observable import \
     PanasonicCameraObservable, ObservableCameraProperty
 from robot_cameraman.cameraman import Cameraman
-from robot_cameraman.cameraman_mode_manager import CameramanModeManager
+from robot_cameraman.cameraman_mode_manager import CameramanModeManager, \
+    SurfptzModeManager
 from robot_cameraman.configuration import read_configuration_file
 from robot_cameraman.detection_engine.color import ColorDetectionEngine, \
     ColorDetectionEngineUI
@@ -262,17 +263,27 @@ tilt_speed_manager = max_speed_and_acceleration_updater.add(
 configurable_align_tracking_strategy = \
     ConfigurableAlignTrackingStrategy(
         destination, live_view_image_size, max_allowed_speed=16)
-cameraman_mode_manager = CameramanModeManager(
-    camera_controller=SmoothCameraController(
-        gimbal,
-        camera_manager,
-        rotate_speed_manager=rotate_speed_manager,
-        tilt_speed_manager=tilt_speed_manager),
-    align_tracking_strategy=max_speed_and_acceleration_updater.add(
-        configurable_align_tracking_strategy),
-    tracking_strategy=tracking_strategy,
-    search_target_strategy=max_speed_and_acceleration_updater.add(
-        RotateSearchTargetStrategy(args.rotatingSearchSpeed)))
+
+if args.gimbal == "bescor":
+    cameraman_mode_manager = SurfptzModeManager(
+        camera_controller = SurfptzCameraController(
+            gimbal,
+            camera_manager
+        )
+    )
+else:
+    cameraman_mode_manager = CameramanModeManager(
+        camera_controller=SmoothCameraController(
+            gimbal,
+            camera_manager,
+            rotate_speed_manager=rotate_speed_manager,
+            tilt_speed_manager=tilt_speed_manager),
+        align_tracking_strategy=max_speed_and_acceleration_updater.add(
+            configurable_align_tracking_strategy),
+        tracking_strategy=tracking_strategy,
+        search_target_strategy=max_speed_and_acceleration_updater.add(
+            RotateSearchTargetStrategy(args.rotatingSearchSpeed)))
+    
 
 # noinspection PyListCreation
 user_interfaces = []

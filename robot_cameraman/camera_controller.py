@@ -40,6 +40,26 @@ class CameraController(Protocol):
         raise NotImplementedError
 
 
+class SurfptzCameraController(CameraController):
+    """
+    Controller for use with Bescor pan/tilt and witmotion IMU
+    """
+    def __init__(self, gimbal: Gimbal) -> None:
+        self._gimbal = gimbal
+
+    def start(self) -> None:
+        raise NotImplementedError
+
+    def stop(self, camera_speeds: CameraSpeeds) -> None:
+        raise NotImplementedError
+
+    def is_camera_moving(self) -> bool:
+        raise NotImplementedError
+
+    def update(self, pan_angle, tilt_angle):
+        self._gimbal.control(pan_angle, tilt_angle)
+
+
 class SimpleCameraController(CameraController):
     yaw_speed: float = 0
 

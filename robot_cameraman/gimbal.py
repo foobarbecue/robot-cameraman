@@ -58,42 +58,42 @@ class BescorGimbal(Gimbal):
             yaw_angle: float = 0,
             pitch_mode: ControlMode = ControlMode.angle,
             pitch_angle: float = 0) -> None:
+        """
+        Set the relays controlling the Bescor gimbal to the correct values to
+        move towards desired yaw and pitch angle.
+        """
         try:
+            # Rename variables for clarity
             desired_yaw = yaw_angle
             desired_pitch = pitch_angle
             
-            while True:
-                # Probably not ok that this is blocking
-                # Maybe shouldn't have a loop here
-                sleep(0.1)
-            
-                z_angle = self.imu.get_angle()[2]
-                z_err = z_angle - desired_yaw
-                if abs(z_err) > self.deadband:
-                    if z_err > 0:
-                        self.yaw_relays[0].on()
-                        logger.info(f'z error {z_err}, moving yaw0')
-                    else:
-                        self.yaw_relays[1].on()
-                        logger.info(f'z error {z_err}, moving yaw1')
+            z_angle = self.imu.get_angle()[2]
+            z_err = z_angle - desired_yaw
+            if abs(z_err) > self.deadband:
+                if z_err > 0:
+                    self.yaw_relays[0].on()
+                    logger.info(f'z error {z_err}, moving yaw0')
                 else:
-                    for relay in self.yaw_relays:
-                        relay.off()
-                    logger.info(f'z error {z_err}, within deadband')
+                    self.yaw_relays[1].on()
+                    logger.info(f'z error {z_err}, moving yaw1')
+            else:
+                for relay in self.yaw_relays:
+                    relay.off()
+                logger.info(f'z error {z_err}, within deadband')
 
-                y_angle = self.imu.get_angle()[1]
-                y_err = y_angle - desired_pitch
-                if abs(y_err) > self.deadband:
-                    if y_err > 0:
-                        self.yaw_relays[0].on()
-                        logger.info(f'y error {y_err}, moving pitch0')
-                    else:
-                        self.pitch_relays[1].on()
-                        logger.info(f'y error {y_err}, moving pitch1')
+            y_angle = self.imu.get_angle()[1]
+            y_err = y_angle - desired_pitch
+            if abs(y_err) > self.deadband:
+                if y_err > 0:
+                    self.yaw_relays[0].on()
+                    logger.info(f'y error {y_err}, moving pitch0')
                 else:
-                    for relay in self.pitch_relays:
-                        relay.off()
-                    logger.info(f'y error {y_err}, within deadband')
+                    self.pitch_relays[1].on()
+                    logger.info(f'y error {y_err}, moving pitch1')
+            else:
+                for relay in self.pitch_relays:
+                    relay.off()
+                logger.info(f'y error {y_err}, within deadband')
         finally:
             self.stop()
 
