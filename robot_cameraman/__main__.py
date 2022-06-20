@@ -266,7 +266,7 @@ configurable_align_tracking_strategy = \
 
 if args.gimbal == "bescor":
     cameraman_mode_manager = SurfptzModeManager(
-        camera_controller = SurfptzCameraController(
+        camera_controller=SurfptzCameraController(
             gimbal,
             camera_manager
         )

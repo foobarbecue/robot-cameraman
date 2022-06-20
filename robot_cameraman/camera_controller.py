@@ -44,8 +44,10 @@ class SurfptzCameraController(CameraController):
     """
     Controller for use with Bescor pan/tilt and witmotion IMU
     """
-    def __init__(self, gimbal: Gimbal) -> None:
+    def __init__(self, gimbal: Gimbal,
+                 camera_manager: PanasonicCameraManager) -> None:
         self._gimbal = gimbal
+        self._camera_manger = camera_manager
 
     def start(self) -> None:
         raise NotImplementedError
