@@ -252,7 +252,7 @@ tracking_strategy = StopIfLostTrackingStrategy(
     slow_down_time=1)
 if args.gimbal == 'SimpleBGC':
     gimbal = SimpleBgcGimbal()
-elif args.gimbal == 'Bescor':
+elif args.gimbal == 'Bescor' or args.gimbal == "bescor":
     gimbal = BescorGimbal()
 else:
     gimbal = DummyGimbal()
@@ -264,7 +264,7 @@ configurable_align_tracking_strategy = \
     ConfigurableAlignTrackingStrategy(
         destination, live_view_image_size, max_allowed_speed=16)
 
-if args.gimbal == "bescor":
+if args.gimbal == "Bescor" or args.gimbal == "bescor":
     cameraman_mode_manager = SurfptzModeManager(
         camera_controller=SurfptzCameraController(
             gimbal,

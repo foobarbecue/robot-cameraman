@@ -108,7 +108,24 @@ class SurfptzModeManager:
         self._camera_controller = camera_controller
         self.mode_name = 'manual'
         self.is_zoom_enabled = False
+        self._camera_speeds: CameraSpeeds = CameraSpeeds()
 
     def angle(self, pan_angle: int, tilt_angle: int) -> None:
         self.mode_name = 'angle'
         self._camera_controller.update(pan_angle, tilt_angle)
+        
+
+    def is_manual_mode(self):
+        return self.mode_name == 'manual'
+
+    def update(self, target, is_target_lost):
+        pass
+
+    def start(self) -> None:
+        pass
+
+    def stop(self) -> None:
+        pass
+
+    def stop_camera(self) -> None:
+        pass
